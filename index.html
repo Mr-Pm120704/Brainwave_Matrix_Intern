@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgb(226, 226, 226);
+        }
+        .todo-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 800px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .todo-container h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .todo-input {
+            width: 30%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #66a6ff;
+            border-radius: 5px;
+            outline: none;
+        }
+        .add-btn {
+            background-color: #66a6ff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .add-btn:hover {
+            background-color: #557bbf;
+        }
+        .todo-list {
+            padding: 0;
+            margin-top: 20px;
+            list-style: none;
+            width: 845px;
+            display: flex;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            flex-direction: column;
+            gap: 30px;
+        }
+        .todo-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            background: #f7f7f7;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .todo-item span {
+            margin-bottom: 10px;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+        .delete-btn {
+            background-color: #ff6b6b;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.6s;
+        }
+        .delete-btn:hover {
+            background-color: #bf4545;
+        }
+        .edit-btn {
+            background-color: #ffa500;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .edit-btn:hover {
+            background-color: #cc8400;
+        }
+    </style>
+</head>
+<body>
+    <div class="todo-container">
+        <h1>To-Do List For Employee</h1>
+        <input type="text" id="name" class="todo-input" placeholder="Employee Name">
+        <input type="text" id="position" class="todo-input" placeholder="Position">
+        <button id="actionBtn" class="add-btn" onclick="addTask()">Add Employee</button>
+    </div>
+    <div>
+        <ul id="todoList" class="todo-list"></ul>
+    </div>
+    <script>
+        let editMode = false;
+        let currentEditItem = null;
+
+        function addTask() {
+            const inputName = document.getElementById('name');
+            const inputPosition = document.getElementById('position');
+            const nameText = inputName.value.trim();
+            const positionText = inputPosition.value.trim();
+
+            if (nameText === '' || positionText === '') {
+                alert('Please enter the Name and Position!');
+                return;
+            }
+
+            if (editMode) {
+                currentEditItem.querySelector('.employee-name').textContent = `Name: ${nameText}`;
+                currentEditItem.querySelector('.employee-position').textContent = `Position: ${positionText}`;
+                document.getElementById('actionBtn').textContent = 'Add Employee';
+                document.getElementById('actionBtn').setAttribute('onclick', 'addTask()');
+                editMode = false;
+                currentEditItem = null;
+            } else {
+                const taskItem = document.createElement('li');
+                taskItem.className = 'todo-item';
+                taskItem.innerHTML = `
+                    <span class="employee-name">Name: ${nameText}</span>
+                    <span class="employee-position">Position: ${positionText}</span>
+                    <div class="button-group">
+                        <button class="edit-btn" onclick="editTask(this)">Edit</button>
+                        <button class="delete-btn" onclick="deleteTask(this)">Delete</button>
+                    </div>
+                `;
+                document.getElementById('todoList').appendChild(taskItem);
+            }
+
+            inputName.value = '';
+            inputPosition.value = '';
+        }
+
+        function deleteTask(button) {
+            alert("You Want To Delete This Employee's Details!");
+            const taskItem = button.parentElement.parentElement;
+            document.getElementById('todoList').removeChild(taskItem);
+        }
+
+        function editTask(button) {
+            const taskItem = button.parentElement.parentElement;
+            const nameText = taskItem.querySelector('.employee-name').textContent.replace('Name: ', '');
+            const positionText = taskItem.querySelector('.employee-position').textContent.replace('Position: ', '');
+
+            document.getElementById('name').value = nameText;
+            document.getElementById('position').value = positionText;
+            document.getElementById('actionBtn').textContent = 'Save Employee';
+            document.getElementById('actionBtn').setAttribute('onclick', 'addTask()');
+
+            editMode = true;
+            currentEditItem = taskItem;
+        }
+    </script>
+</body>
+</html>
