@@ -107,11 +107,25 @@
         <button id="actionBtn" class="add-btn" onclick="addTask()">Add Employee</button>
     </div>
     <div>
-        <ul id="todoList" class="todo-list"></ul>
+        <ul id="todoList" class="todo-list">
+            <p id="placeholder" style="text-align: center; color: gray;">No Employee Found !</p>
+        </ul>
     </div>
     <script>
         let editMode = false;
         let currentEditItem = null;
+
+        function update(){
+            const todoList = document.getElementById('todoList');
+            const placeholder = document.getElementById('placeholder');
+            const items = todoList.querySelectorAll('.todo-item');
+            if (items.length === 0) {
+                placeholder.style.display = 'block';
+            } else {
+                placeholder.style.display = 'none';
+            }
+        }
+
 
         function addTask() {
             const inputName = document.getElementById('name');
@@ -147,12 +161,14 @@
 
             inputName.value = '';
             inputPosition.value = '';
+            update();
         }
 
         function deleteTask(button) {
             alert("You Want To Delete This Employee's Details!");
             const taskItem = button.parentElement.parentElement;
             document.getElementById('todoList').removeChild(taskItem);
+            update();
         }
 
         function editTask(button) {
@@ -168,6 +184,7 @@
             editMode = true;
             currentEditItem = taskItem;
         }
+        update();
     </script>
 </body>
 </html>
